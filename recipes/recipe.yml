@@ -65,10 +65,6 @@ modules:
     repos:
       files:
         - protonvpn-stable.repo
-    install:
-      install-weak-deps: false
-      packages:
-        - proton-vpn-cli
 
   - type: files
     files:
@@ -77,6 +73,7 @@ modules:
 
   - type: script
     scripts:
+      - proton-vpn.sh
       - ssh-agent.sh
       - xwayland.sh
 
