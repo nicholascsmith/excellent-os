@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Installs the private dotfiles repo into $HOME. Requires `glab auth login` first.
+set -euo pipefail
+
+repository='ncarters/excellent'
+work_directory="$(mktemp -d)"
+trap 'rm -rf "$work_directory"' EXIT
+
+glab repo clone "$repository" "$work_directory/dotfiles"
+
+dotfiles="$work_directory/dotfiles"
+mkdir -p "$HOME/.config" "$HOME/.agents"
+
+cp -v "$dotfiles/.zshrc" "$dotfiles/.zprofile" "$HOME/"
+for entry in "$dotfiles"/dots/*; do
+	case "$(basename "$entry")" in
+	ghostty | mako | swaylock | systemd | waybar) continue ;;
+	esac
+	cp -rv "$entry" "$HOME/.config/"
+done
+cp -rv "$dotfiles/.agents/." "$HOME/.agents/"

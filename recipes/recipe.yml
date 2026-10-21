@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: excellent-os
+description: Sway workstation on secureblue.
+base-image: ghcr.io/secureblue/sericea-main-hardened
+image-version: latest
+
+modules:
+  - type: dnf
+    install:
+      install-weak-deps: false
+      packages:
+        # sway desktop
+        - Thunar
+        - brightnessctl
+        - foot
+        - gcr
+        - gnome-disk-utility
+        - grim
+        - jetbrains-mono-fonts
+        - noctalia
+        - pavucontrol
+        - slurp
+        - transmission-gtk
+        - unrar
+        - xarchiver
+        - xdg-desktop-portal
+        - xdg-desktop-portal-wlr
+        # shell and CLI
+        - ImageMagick
+        - bash-completion
+        - fastfetch
+        - fd-find
+        - gitleaks
+        - glab
+        - hcloud
+        - jq
+        - rclone
+        - ripgrep
+        - ruff
+        - shfmt
+        - trivy
+        - uv
+        - yt-dlp
+        - zoxide
+        - zsh
+        - zsh-syntax-highlighting
+        # development
+        - cmake
+        - gcc
+        - gcc-c++
+        - make
+        - postgresql
+        - postgresql-server
+        - rbenv
+        - ruby
+        - ruby-build
+    # sway-config-fedora requires waybar, swaybg, swayidle, swaylock and lxqt-policykit, so they stay installed but unused
+    remove:
+      packages:
+        - blueman
+        - dunst
+        - network-manager-applet
+
+  - type: dnf
+    repos:
+      files:
+        - protonvpn-stable.repo
+    install:
+      install-weak-deps: false
+      packages:
+        - proton-vpn-cli
+
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  - type: script
+    scripts:
+      - ssh-agent.sh
+      - xwayland.sh
+
+  - type: signing
