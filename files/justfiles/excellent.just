@@ -3,11 +3,19 @@ excellent-setup:
     #!/usr/bin/bash
     set -euo pipefail
 
+    # glab comes from Homebrew, so install it before logging in; the rest of the Brewfile comes later
+    ujust set-brew on
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    brew install glab
+
     # HTTPS with glab as the credential helper, because a fresh machine has no SSH key at GitLab
     if ! glab auth status --hostname gitlab.com >/dev/null 2>&1; then
         glab auth login --hostname gitlab.com --git-protocol https --setup-git-credential-helper
     fi
     glab config set git_protocol https --host gitlab.com
+    # glab records its versioned Cellar path as the helper, which `brew cleanup` deletes after an upgrade
+    git config --global --replace-all credential.https://gitlab.com.helper ''
+    git config --global --add credential.https://gitlab.com.helper '!/home/linuxbrew/.linuxbrew/bin/glab auth git-credential'
     /usr/libexec/excellent/install-dotfiles
 
     # The dotfiles' git config signs every commit with this key
@@ -45,12 +53,7 @@ excellent-setup:
         run0 usermod -s /usr/bin/zsh "$USER"
     fi
 
-    ujust set-brew on
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     brew bundle --file=/usr/share/excellent/Brewfile
-
-    uv_tools="$(uv tool list)"
-    [[ "$uv_tools" == *pyrefly* ]] || uv tool install pyrefly
 
     ujust set-flathub-unfiltered on
     flatpak install --user --or-update -y --noninteractive flathub \
