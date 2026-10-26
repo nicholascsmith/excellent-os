@@ -39,17 +39,10 @@ ujust enroll-secureblue-secure-boot-key
 ## After First Boot
 
 ```bash
-glab auth login
-/usr/libexec/excellent/install-dotfiles
-run0 usermod -s /usr/bin/zsh "$USER"
-brew bundle --file=/usr/share/excellent/Brewfile
-uv tool install pyrefly
-ujust set-flathub-unfiltered on
-flatpak install --user flathub com.heroicgameslauncher.hgl com.obsproject.Studio org.inkscape.Inkscape org.kde.kdenlive org.signal.Signal
-ujust install-steam
+ujust excellent-setup
 ```
 
-The unfiltered Flathub remote is per user, so it is added after first boot rather than in the image. `ujust install-steam` installs the Steam Flatpak with the overrides and kernel argument it needs; choose the Flatpak method.
+It logs in to GitLab, installs the `ncarters/excellent` dotfiles, switches the shell to zsh, installs the Brewfile and pyrefly, adds the unfiltered Flathub remote, installs the Flatpak apps, and runs `ujust install-steam` (choose the Flatpak method). It skips finished steps, so it is safe to re-run. The recipe lives in `files/justfiles/excellent.just`.
 
 ## Hardening Defaults
 

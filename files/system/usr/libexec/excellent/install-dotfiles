@@ -14,7 +14,7 @@ mkdir -p "$HOME/.config" "$HOME/.agents"
 cp -v "$dotfiles/.zshrc" "$dotfiles/.zprofile" "$HOME/"
 for entry in "$dotfiles"/dots/*; do
 	case "$(basename "$entry")" in
-	ghostty | mako | swaylock | systemd | waybar) continue ;;
+	systemd) continue ;;
 	esac
 	cp -rv "$entry" "$HOME/.config/"
 done

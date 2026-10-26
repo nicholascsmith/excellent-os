@@ -79,6 +79,22 @@ modules:
 
   - type: dnf
     repos:
+      copr:
+        - scottames/ghostty
+        - swayfx/swayfx
+    install:
+      install-weak-deps: false
+      packages:
+        - ghostty
+    # swayfx provides sway, so sway-config-fedora and the session stay intact
+    replace:
+      - from-repo: copr:copr.fedorainfracloud.org:swayfx:swayfx
+        packages:
+          - old: sway
+            new: swayfx
+
+  - type: dnf
+    repos:
       files:
         - brave-browser-beta.repo
         - claude-code.repo
@@ -99,5 +115,7 @@ modules:
       - proton-vpn.sh
       - ssh-agent.sh
       - xwayland.sh
+
+  - type: justfiles
 
   - type: signing
