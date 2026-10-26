@@ -19,6 +19,7 @@ modules:
         - jetbrains-mono-fonts
         - noctalia
         - pavucontrol
+        - rsms-inter-fonts
         - slurp
         - transmission-gtk
         - unrar
@@ -54,6 +55,20 @@ modules:
         - rbenv
         - ruby
         - ruby-build
+        # ruby-build compiles Ruby, and the pg gem links against libpq
+        - autoconf
+        - bzip2
+        - gdbm-devel
+        - libffi-devel
+        - libpq-devel
+        - libyaml-devel
+        - ncurses-devel
+        - openssl-devel
+        - patch
+        - perl-FindBin
+        - readline-devel
+        - rust
+        - zlib-devel
     # sway-config-fedora requires waybar, swaybg, swayidle, swaylock and lxqt-policykit, so they stay installed but unused
     remove:
       packages:
@@ -64,7 +79,14 @@ modules:
   - type: dnf
     repos:
       files:
+        - brave-browser-beta.repo
+        - claude-code.repo
         - protonvpn-stable.repo
+    install:
+      install-weak-deps: false
+      packages:
+        - brave-origin-beta
+        - claude-code
 
   - type: files
     files:

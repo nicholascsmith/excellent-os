@@ -44,9 +44,8 @@ glab auth login
 run0 usermod -s /usr/bin/zsh "$USER"
 brew bundle --file=/usr/share/excellent/Brewfile
 uv tool install pyrefly
-curl -f https://zed.dev/install.sh | sh
 ujust set-flathub-unfiltered on
-flatpak install --user flathub com.brave.Browser com.heroicgameslauncher.hgl com.obsproject.Studio org.inkscape.Inkscape org.kde.kdenlive org.signal.Signal
+flatpak install --user flathub com.heroicgameslauncher.hgl com.obsproject.Studio org.inkscape.Inkscape org.kde.kdenlive org.signal.Signal
 ujust install-steam
 ```
 
@@ -60,7 +59,7 @@ The image enables Xwayland for Steam and Windows games. Other secureblue default
 | --- | --- |
 | Bluetooth does not work | `ujust set-bluetooth-modules on` |
 | Podman or Distrobox cannot start containers | `ujust set-container-userns on` |
-| An Electron app crashes with a memory allocator error | `with-standard-malloc <command>` |
+| An Electron or Chromium app, such as Brave, crashes with a memory allocator error | `with-standard-malloc <command>` |
 | An app needs ptrace | `ujust set-ptrace` |
 | Printing is needed | `ujust set-cups on` |
 | Homebrew is unavailable | `ujust set-brew on` |
