@@ -77,11 +77,12 @@ modules:
         - dunst
         - network-manager-applet
 
+  # COPR repo files, because secureblue's os-release makes `dnf copr` look for secureblue chroots
   - type: dnf
     repos:
-      copr:
-        - scottames/ghostty
-        - swayfx/swayfx
+      files:
+        - scottames-ghostty.repo
+        - swayfx-swayfx.repo
     install:
       install-weak-deps: false
       packages:
