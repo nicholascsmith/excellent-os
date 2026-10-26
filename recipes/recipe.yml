@@ -29,6 +29,7 @@ modules:
         # shell and CLI
         - ImageMagick
         - bash-completion
+        - eza
         - fastfetch
         - fd-find
         - gitleaks
