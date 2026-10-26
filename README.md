@@ -46,7 +46,7 @@ systemctl reboot
 ujust excellent-setup
 ```
 
-It logs in to GitLab over HTTPS, installs the `ncarters/excellent` dotfiles, creates a git signing key and registers it with GitLab, asks for the Context7 API key and stores it in GNOME Keyring, switches the shell to zsh, installs the Brewfile and pyrefly, adds the unfiltered Flathub remote, installs the Flatpak apps, and runs `ujust install-steam` (choose the Flatpak method). It skips finished steps, so it is safe to re-run. The recipe lives in `files/justfiles/excellent.just`.
+It logs in to GitLab over HTTPS, installs the `ncarters/excellent` dotfiles, creates a git signing key and registers it with GitLab, asks for the Context7 API key and stores it in GNOME Keyring, switches the shell to zsh, installs the Brewfile, adds the unfiltered Flathub remote, installs the Flatpak apps, and runs `ujust install-steam` (choose the Flatpak method). It skips finished steps, so it is safe to re-run. The recipe lives in `files/justfiles/excellent.just`.
 
 ## Updates
 
@@ -60,7 +60,7 @@ The image changes a few secureblue defaults on purpose:
 
 - Xwayland is enabled for Steam and Windows games.
 - Brave Origin Beta keeps its setuid `chrome-sandbox` helper. secureblue strips setuid binaries from its own image, but Brave needs this helper to sandbox sites while secureblue blocks unprivileged user namespaces.
-- Brave, Claude Code, Ghostty and SwayFX come from their vendors' or COPR repos, which are removed again after the build.
+- Brave, Ghostty and SwayFX come from their vendors' or COPR repos, which are removed again after the build.
 - Proton VPN's split-tunnelling service stays enabled for future use.
 
 Other defaults are unchanged; enable a toggle only when its symptom appears.

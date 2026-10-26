@@ -13,23 +13,18 @@ modules:
         - gcr
         - gnome-disk-utility
         - jetbrains-mono-fonts
+        - mpv
         - noctalia
         - rsms-inter-fonts
         - transmission-gtk
         # shell and CLI
+        - btop
         - eza
         - fastfetch
         - fd-find
-        - gitleaks
-        - glab
-        - hcloud
         - rclone
         - ripgrep
-        - ruff
         - sqlite
-        - trivy
-        - uv
-        - yt-dlp
         - zoxide
         - zsh
         - zsh-syntax-highlighting
@@ -38,9 +33,7 @@ modules:
         - gcc-c++
         - postgresql
         - postgresql-server
-        - rbenv
         - ruby
-        - ruby-build
         # ruby-build compiles Ruby, and the pg gem links against libpq
         - autoconf
         - gdbm-devel
@@ -84,12 +77,10 @@ modules:
       cleanup: true
       files:
         - brave-browser-beta.repo
-        - claude-code.repo
     install:
       install-weak-deps: false
       packages:
         - brave-origin-beta
-        - claude-code
 
   - type: files
     files:
