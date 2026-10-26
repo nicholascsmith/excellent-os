@@ -16,6 +16,16 @@ A Sway workstation image built with [BlueBuild](https://blue-build.org) on top o
 
 ## Install
 
+secureblue's kernel is signed with its own key, so enroll that key before switching while Secure Boot is on. Otherwise shim refuses to boot the new image:
+
+```bash
+curl -fLO https://github.com/secureblue/secureblue/raw/live/files/system/usr/share/pki/akmods/certs/akmods-secureblue.der
+run0 mokutil --import akmods-secureblue.der
+systemctl reboot
+```
+
+Use the password `secureblue`, then choose **Enroll MOK** in MokManager during the reboot.
+
 From an existing secureblue or Fedora Atomic install, switch to the unsigned image first:
 
 ```bash
@@ -30,27 +40,30 @@ run0 bootc switch --enforce-container-sigpolicy ghcr.io/nicholascsmith/excellent
 systemctl reboot
 ```
 
-Enroll the secureblue Secure Boot key if prompted:
-
-```bash
-ujust enroll-secureblue-secure-boot-key
-```
-
 ## After First Boot
 
 ```bash
 ujust excellent-setup
 ```
 
-It logs in to GitLab, installs the `ncarters/excellent` dotfiles, switches the shell to zsh, installs the Brewfile and pyrefly, adds the unfiltered Flathub remote, installs the Flatpak apps, and runs `ujust install-steam` (choose the Flatpak method). It skips finished steps, so it is safe to re-run. The recipe lives in `files/justfiles/excellent.just`.
+It logs in to GitLab over HTTPS, installs the `ncarters/excellent` dotfiles, creates a git signing key and registers it with GitLab, switches the shell to zsh, installs the Brewfile and pyrefly, adds the unfiltered Flathub remote, installs the Flatpak apps, and runs `ujust install-steam` (choose the Flatpak method). It skips finished steps, so it is safe to re-run. The recipe lives in `files/justfiles/excellent.just`.
 
 ## Updates
 
-The image rebuilds daily and the system updates itself in the background. secureblue's provenance check only recognises secureblue's own images, so the image removes it from the automatic update services and relies on the signature policy enforced by the signed `bootc switch` instead.
+The image follows secureblue's `latest` tag, so it moves to new Fedora releases when secureblue does. It rebuilds daily, and a failed scheduled build opens a GitHub issue.
+
+The system updates itself in the background. secureblue's provenance check only accepts secureblue's own images, so the image replaces `/usr/libexec/secureblue/verify-provenance.sh` with a check that allows updates only while the signed `bootc switch` is in effect. rpm-ostree then rejects any image whose cosign signature fails. This covers automatic updates, upgrade-on-boot and `ujust update-system`.
 
 ## Hardening Defaults
 
-The image enables Xwayland for Steam and Windows games. Other secureblue defaults are left unchanged; enable a toggle only when its symptom appears.
+The image changes a few secureblue defaults on purpose:
+
+- Xwayland is enabled for Steam and Windows games.
+- Brave Origin Beta keeps its setuid `chrome-sandbox` helper. secureblue strips setuid binaries from its own image, but Brave needs this helper to sandbox sites while secureblue blocks unprivileged user namespaces.
+- Brave, Claude Code, Ghostty and SwayFX come from their vendors' or COPR repos, which are removed again after the build.
+- Proton VPN's split-tunnelling service stays enabled for future use.
+
+Other defaults are unchanged; enable a toggle only when its symptom appears.
 
 | Symptom | Toggle |
 | --- | --- |

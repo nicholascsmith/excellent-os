@@ -13,9 +13,25 @@ mkdir -p "$HOME/.config" "$HOME/.agents"
 
 cp -v "$dotfiles/.zshrc" "$dotfiles/.zprofile" "$HOME/"
 for entry in "$dotfiles"/dots/*; do
-	case "$(basename "$entry")" in
-	systemd) continue ;;
-	esac
+	# Proton VPN rewrites its own settings, so only seed them on the first install
+	if [[ "$(basename "$entry")" == Proton && -e "$HOME/.config/Proton" ]]; then
+		continue
+	fi
 	cp -rv "$entry" "$HOME/.config/"
 done
 cp -rv "$dotfiles/.agents/." "$HOME/.agents/"
+
+# Same links as on the MacBook, so every agent reads the shared instructions and skills
+link() {
+	mkdir -p "$(dirname "$2")"
+	if [[ -d "$2" && ! -L "$2" ]]; then
+		echo "Skipping $2: it is a real directory" >&2
+		return
+	fi
+	ln -sfn "$1" "$2"
+}
+link "$HOME/.agents/AGENTS.md" "$HOME/.claude/AGENTS.md"
+link "$HOME/.agents/skills" "$HOME/.claude/skills"
+link "$HOME/.agents/scripts/claude/statusline.sh" "$HOME/.claude/statusline.sh"
+link "$HOME/.agents/AGENTS.md" "$HOME/.codex/AGENTS.md"
+link "$HOME/.agents/AGENTS.md" "$HOME/.config/zed/AGENTS.md"
