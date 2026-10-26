@@ -27,6 +27,16 @@ excellent-setup:
         printf '%s namespaces="git" %s\n' "$email" "$public_key" >>"$allowed_signers"
     fi
 
+    # The agents' Context7 MCP server reads this key; SDDM unlocks GNOME Keyring at login
+    if ! secret-tool lookup service CONTEXT7_API_KEY account "$USER" >/dev/null 2>&1; then
+        read -rsp "Context7 API key (Enter to skip): " context7_api_key
+        echo
+        if [[ -n "$context7_api_key" ]]; then
+            printf '%s' "$context7_api_key" | secret-tool store --label='Context7 API key' service CONTEXT7_API_KEY account "$USER"
+        fi
+        unset context7_api_key
+    fi
+
     # secureblue's terminal banner misreads this image's tag and warns in every new terminal
     mkdir -p "$HOME/.config"
     touch "$HOME/.config/no-show-user-motd"
