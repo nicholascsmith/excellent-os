@@ -44,6 +44,10 @@ ujust excellent-setup
 
 It logs in to GitLab, installs the `ncarters/excellent` dotfiles, switches the shell to zsh, installs the Brewfile and pyrefly, adds the unfiltered Flathub remote, installs the Flatpak apps, and runs `ujust install-steam` (choose the Flatpak method). It skips finished steps, so it is safe to re-run. The recipe lives in `files/justfiles/excellent.just`.
 
+## Updates
+
+The image rebuilds daily and the system updates itself in the background. secureblue's provenance check only recognises secureblue's own images, so the image removes it from the automatic update services and relies on the signature policy enforced by the signed `bootc switch` instead.
+
 ## Hardening Defaults
 
 The image enables Xwayland for Steam and Windows games. Other secureblue defaults are left unchanged; enable a toggle only when its symptom appears.
