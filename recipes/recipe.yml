@@ -9,48 +9,32 @@ modules:
     install:
       install-weak-deps: false
       packages:
-        # sway desktop
-        - Thunar
-        - brightnessctl
-        - foot
+        # sway desktop (base image already has Thunar, foot, grim, slurp, pavucontrol, xarchiver and the portals)
         - gcr
         - gnome-disk-utility
-        - grim
         - jetbrains-mono-fonts
         - noctalia
-        - pavucontrol
         - rsms-inter-fonts
-        - slurp
         - transmission-gtk
-        - unrar
-        - xarchiver
-        - xdg-desktop-portal
-        - xdg-desktop-portal-wlr
         # shell and CLI
-        - ImageMagick
-        - bash-completion
         - eza
         - fastfetch
         - fd-find
         - gitleaks
         - glab
         - hcloud
-        - jq
         - rclone
         - ripgrep
         - ruff
-        - shfmt
         - trivy
         - uv
         - yt-dlp
         - zoxide
         - zsh
         - zsh-syntax-highlighting
-        # development
+        # development (base image already has gcc, make, bzip2 and patch)
         - cmake
-        - gcc
         - gcc-c++
-        - make
         - postgresql
         - postgresql-server
         - rbenv
@@ -58,14 +42,12 @@ modules:
         - ruby-build
         # ruby-build compiles Ruby, and the pg gem links against libpq
         - autoconf
-        - bzip2
         - gdbm-devel
         - libffi-devel
         - libpq-devel
         - libyaml-devel
         - ncurses-devel
         - openssl-devel
-        - patch
         - perl-FindBin
         - readline-devel
         - rust
@@ -80,6 +62,7 @@ modules:
   # COPR repo files, because secureblue's os-release makes `dnf copr` look for secureblue chroots
   - type: dnf
     repos:
+      cleanup: true
       files:
         - scottames-ghostty.repo
         - swayfx-swayfx.repo
@@ -94,12 +77,13 @@ modules:
           - old: sway
             new: swayfx
 
+  # Repos are only needed while building; the system updates as a whole image
   - type: dnf
     repos:
+      cleanup: true
       files:
         - brave-browser-beta.repo
         - claude-code.repo
-        - protonvpn-stable.repo
     install:
       install-weak-deps: false
       packages:
