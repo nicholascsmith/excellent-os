@@ -26,6 +26,7 @@ modules:
         - rclone
         - ripgrep
         - ruff
+        - sqlite
         - trivy
         - uv
         - yt-dlp
