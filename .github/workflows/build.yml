@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      issues: write
       packages: write
       id-token: write
     strategy:
@@ -32,3 +33,18 @@ jobs:
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
           maximize_build_space: true
+
+      # A failed daily build otherwise goes unnoticed while the machine keeps the last good image
+      - name: Open an issue when the scheduled build fails
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Scheduled image build failed"
+          open="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$title\" in:title" --json number --jq length)"
+          if [ "$open" -eq 0 ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$RUN_URL"
+          else
+            echo "An issue is already open for a failed scheduled build"
+          fi
