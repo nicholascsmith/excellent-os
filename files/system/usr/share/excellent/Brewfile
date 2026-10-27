@@ -1,3 +1,4 @@
+brew "chezmoi"
 brew "cosign"
 brew "gh"
 brew "gitleaks"

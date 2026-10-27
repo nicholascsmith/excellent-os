@@ -3,10 +3,10 @@ excellent-setup:
     #!/usr/bin/bash
     set -euo pipefail
 
-    # glab comes from Homebrew, so install it before logging in; the rest of the Brewfile comes later
+    # glab and chezmoi come from Homebrew and are needed before the rest of the Brewfile
     ujust set-brew on
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    brew install glab
+    brew install glab chezmoi
 
     # HTTPS with glab as the credential helper, because a fresh machine has no SSH key at GitLab
     if ! glab auth status --hostname gitlab.com >/dev/null 2>&1; then
@@ -16,7 +16,13 @@ excellent-setup:
     # glab records its versioned Cellar path as the helper, which `brew cleanup` deletes after an upgrade
     git config --global --replace-all credential.https://gitlab.com.helper ''
     git config --global --add credential.https://gitlab.com.helper '!/home/linuxbrew/.linuxbrew/bin/glab auth git-credential'
-    /usr/libexec/excellent/install-dotfiles
+
+    # chezmoi manages the dotfiles from this clone and asks before overwriting files changed since its last apply
+    dotfiles="$HOME/Projects/excellent"
+    if [[ ! -d "$dotfiles/.git" ]]; then
+        chezmoi init --source "$dotfiles" https://gitlab.com/ncarters/excellent.git
+    fi
+    chezmoi apply
 
     # The dotfiles' git config signs every commit with this key
     signing_key="$HOME/.ssh/id_ed25519_git_signing"
