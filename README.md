@@ -4,19 +4,15 @@ A workstation image built with [BlueBuild](https://blue-build.org) on top of [se
 
 ## Install
 
-1. **Install secureblue.** Follow [secureblue's install guide](https://secureblue.dev/install#iso) to install its Sway ISO (the `main` image), with Secure Boot on. Encrypt the disk and name the user `ncarters`: the image logs that user in automatically, so the disk password is the only one you type at boot. If secureblue then says its Secure Boot key is not enrolled, run `ujust enroll-secure-boot-keys`.
+1. **Install secureblue.** Follow [secureblue's install guide](https://secureblue.dev/install#iso) to install its Sway ISO (the `main` image), with Secure Boot on. Encrypt the disk, name the user `ncarters` and make it an administrator: the image logs that user in automatically, so the disk password is the only one you type at boot.
 
-2. **Switch to the image.**
+2. **Enroll secureblue's Secure Boot key.** On the first boot, a blue MOK screen appears: choose **Enroll MOK → Continue → Yes** and type `secureblue`. If it never appears, run `ujust enroll-secureblue-secure-boot-key` and reboot.
 
-   ```bash
-   run0 bootc switch ghcr.io/nicholascsmith/excellent-os:latest
-   systemctl reboot
-   ```
-
-3. **Switch again with signature checks.** The first switch can't check signatures, because the key that checks them ships inside the image. Automatic updates stay off until this step is done.
+3. **Switch to the image.** secureblue rejects images signed by keys it doesn't know, so the script trusts this image's key just long enough to switch to it with signature checks on.
 
    ```bash
-   run0 bootc switch --enforce-container-sigpolicy ghcr.io/nicholascsmith/excellent-os:latest
+   run0
+   curl -fsSL https://raw.githubusercontent.com/nicholascsmith/excellent-os/master/install.sh | bash
    systemctl reboot
    ```
 

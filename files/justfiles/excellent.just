@@ -26,7 +26,7 @@ excellent-setup:
 
     # The dotfiles' git config signs every commit with this key
     signing_key="$HOME/.ssh/id_ed25519_git_signing"
-    email="$(git config --global user.email)"
+    email="$(git config user.email)"
     if [[ ! -f "$signing_key" ]]; then
         install -d -m 700 "$HOME/.ssh"
         ssh-keygen -t ed25519 -C "$email git signing" -f "$signing_key"
@@ -74,7 +74,7 @@ excellent-setup:
     touch "$HOME/.config/no-show-user-motd"
 
     if [[ "$(getent passwd "$USER" | cut -d: -f7)" != /usr/bin/zsh ]]; then
-        run0 usermod -s /usr/bin/zsh "$USER"
+        run0 -i usermod -s /usr/bin/zsh "$USER"
     fi
 
     brew bundle --file=/usr/share/excellent/Brewfile

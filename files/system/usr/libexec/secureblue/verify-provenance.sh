@@ -12,7 +12,7 @@ case "${image_ref}" in
         ;;
     *)
         echo "WARNING: '${image_ref}' does not enforce the excellent-os signature policy." >&2
-        echo "Run: run0 bootc switch --enforce-container-sigpolicy ghcr.io/nicholascsmith/excellent-os:latest" >&2
+        echo "Run: run0 -i bootc switch --enforce-container-sigpolicy ghcr.io/nicholascsmith/excellent-os:latest" >&2
         exit 1
         ;;
 esac
