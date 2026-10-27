@@ -46,7 +46,7 @@ modules:
         - readline-devel
         - rust
         - zlib-devel
-    # sway-config-fedora requires waybar, swaybg, swayidle, swaylock and lxqt-policykit, so they stay installed but unused
+    # Noctalia replaces these; waybar, swaybg, swayidle, swaylock and lxqt-policykit stay because sway-config-fedora requires them
     remove:
       packages:
         - blueman
