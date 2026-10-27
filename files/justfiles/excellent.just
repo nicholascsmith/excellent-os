@@ -1,4 +1,4 @@
-# Set up dotfiles, zsh, Homebrew, Flatpaks and Steam after first boot; safe to re-run
+# Set up dotfiles, logins, zsh, Homebrew, Flatpaks and Steam after first boot; safe to re-run
 excellent-setup:
     #!/usr/bin/bash
     set -euo pipefail
@@ -100,6 +100,21 @@ excellent-setup:
     if rpm-ostree kargs | grep -q 'ia32_emulation=0'; then
         rpm-ostree kargs --delete-if-present=ia32_emulation=0
         echo "Reboot before running Steam."
+    fi
+
+    # GitHub verifies signed commits only against signing keys registered there, so register the same key.
+    # This comes after the Flatpaks, so the login can open Brave.
+    if ! gh auth status --hostname github.com >/dev/null 2>&1; then
+        gh auth login --hostname github.com --web --git-protocol https --skip-ssh-key --scopes admin:ssh_signing_key
+    fi
+    if ! gh auth status --hostname github.com 2>&1 | grep -q "'admin:ssh_signing_key'"; then
+        gh auth refresh --hostname github.com --scopes admin:ssh_signing_key
+    fi
+    # gh may record its versioned Cellar path as the helper, which `brew cleanup` deletes after an upgrade
+    git config --global --replace-all credential.https://github.com.helper ''
+    git config --global --add credential.https://github.com.helper '!/home/linuxbrew/.linuxbrew/bin/gh auth git-credential'
+    if [[ "$(gh api user/ssh_signing_keys --jq '.[].key')" != *"${public_key#* }"* ]]; then
+        gh ssh-key add "$signing_key.pub" --type signing --title "$(hostname) git signing"
     fi
 
     echo "Setup complete. Log out and back in to start using zsh."

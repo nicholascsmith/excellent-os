@@ -33,5 +33,6 @@ The setup asks for input a few times, and is safe to re-run. It:
 7. Switches the login shell to zsh
 8. Installs the Brewfile
 9. Installs the Flatpak apps, including Brave and Steam
+10. Logs in to GitHub in Brave and registers the signing key there too
 
-Afterwards, run `gh auth login`, then log out and back in.
+Afterwards, log out and back in.
