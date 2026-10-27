@@ -1,75 +1,39 @@
 # excellent-os
 
-A Sway workstation image built with [BlueBuild](https://blue-build.org) on top of [secureblue](https://secureblue.dev)'s `sericea-main-hardened`. Dotfiles stay in the private `ncarters/excellent` repository and are installed after first boot.
-
-## Build Setup
-
-1. Create the GitHub repository `nicholascsmith/excellent-os` and push this directory.
-2. Generate a signing key pair and keep the private key out of the repository:
-
-   ```bash
-   cosign generate-key-pair
-   ```
-
-3. Add the private key as the repository secret `SIGNING_SECRET`, and commit `cosign.pub` to the repository root.
-4. Make the `excellent-os` package public in GitHub Packages after the first build so the machine can pull it.
+A workstation image built with [BlueBuild](https://blue-build.org) on top of [secureblue](https://secureblue.dev)'s `sericea-main-hardened`. The image rebuilds daily and is signed. Dotfiles are installed after first boot.
 
 ## Install
 
-secureblue's kernel is signed with its own key, so enroll that key before switching while Secure Boot is on. Otherwise shim refuses to boot the new image:
+1. **Install secureblue.** Follow [secureblue's install guide](https://secureblue.dev/install#iso) to install its Sway ISO (the `main` image), with Secure Boot on. Encrypt the disk and name the user `ncarters`: the image logs that user in automatically, so the disk password is the only one you type at boot. If secureblue then says its Secure Boot key is not enrolled, run `ujust enroll-secure-boot-keys`.
 
-```bash
-curl -fLO https://github.com/secureblue/secureblue/raw/live/files/system/usr/share/pki/akmods/certs/akmods-secureblue.der
-run0 mokutil --import akmods-secureblue.der
-systemctl reboot
-```
+2. **Switch to the image.**
 
-Use the password `secureblue`, then choose **Enroll MOK** in MokManager during the reboot.
+   ```bash
+   run0 bootc switch ghcr.io/nicholascsmith/excellent-os:latest
+   systemctl reboot
+   ```
 
-From an existing secureblue or Fedora Atomic install, switch to the unsigned image first:
+3. **Switch again with signature checks.** The first switch can't check signatures, because the key that checks them ships inside the image. Automatic updates stay off until this step is done.
 
-```bash
-run0 bootc switch ghcr.io/nicholascsmith/excellent-os:latest
-systemctl reboot
-```
+   ```bash
+   run0 bootc switch --enforce-container-sigpolicy ghcr.io/nicholascsmith/excellent-os:latest
+   systemctl reboot
+   ```
 
-After the reboot, switch to the signed image:
-
-```bash
-run0 bootc switch --enforce-container-sigpolicy ghcr.io/nicholascsmith/excellent-os:latest
-systemctl reboot
-```
-
-## After First Boot
+## First-Boot Setup
 
 ```bash
 ujust excellent-setup
 ```
 
-It logs in to GitLab over HTTPS, installs the `ncarters/excellent` dotfiles, creates a git signing key and registers it with GitLab, asks for the Context7 API key and stores it in GNOME Keyring, switches the shell to zsh, installs the Brewfile, adds the unfiltered Flathub remote, installs the Flatpak apps, and runs `ujust install-steam` (choose the Flatpak method). It skips finished steps, so it is safe to re-run. The recipe lives in `files/justfiles/excellent.just`.
+The setup asks for input a few times, and is safe to re-run. It:
 
-## Updates
+1. Enables Homebrew, installs `glab` and logs in to GitLab
+2. Installs the dotfiles
+3. Creates a git signing key and registers it with GitLab
+4. Recreates the login keyring without a password (it asks first), since autologin never unlocks it, and asks for the Context7 API key (press Enter to skip; re-run the setup to add it later)
+5. Switches the login shell to zsh
+6. Installs the Brewfile
+7. Installs the Flatpak apps and Steam (choose the Flatpak method)
 
-The image follows secureblue's `latest` tag, so it moves to new Fedora releases when secureblue does. It rebuilds daily, and a failed scheduled build opens a GitHub issue.
-
-The system updates itself in the background. secureblue's provenance check only accepts secureblue's own images, so the image replaces `/usr/libexec/secureblue/verify-provenance.sh` with a check that allows updates only while the signed `bootc switch` is in effect. rpm-ostree then rejects any image whose cosign signature fails. This covers automatic updates, upgrade-on-boot and `ujust update-system`.
-
-## Hardening Defaults
-
-The image changes a few secureblue defaults on purpose:
-
-- Xwayland is enabled for Steam and Windows games.
-- Brave Origin Beta keeps its setuid `chrome-sandbox` helper. secureblue strips setuid binaries from its own image, but Brave needs this helper to sandbox sites while secureblue blocks unprivileged user namespaces.
-- Brave, Ghostty and SwayFX come from their vendors' or COPR repos, which are removed again after the build.
-- Proton VPN's split-tunnelling service stays enabled for future use.
-
-Other defaults are unchanged; enable a toggle only when its symptom appears.
-
-| Symptom | Toggle |
-| --- | --- |
-| Bluetooth does not work | `ujust set-bluetooth-modules on` |
-| Podman or Distrobox cannot start containers | `ujust set-container-userns on` |
-| An Electron or Chromium app, such as Brave, crashes with a memory allocator error | `with-standard-malloc <command>` |
-| An app needs ptrace | `ujust set-ptrace` |
-| Printing is needed | `ujust set-cups on` |
-| Homebrew is unavailable | `ujust set-brew on` |
+Afterwards, run `gh auth login`, then log out and back in.
