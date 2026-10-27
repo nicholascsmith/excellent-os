@@ -85,12 +85,17 @@ excellent-setup:
         com.obsproject.Studio \
         org.inkscape.Inkscape \
         org.kde.kdenlive \
-        org.signal.Signal
+        org.signal.Signal \
+        com.valvesoftware.Steam
 
-    # Games crash with hardened_malloc; same override secureblue applies to Steam
+    # Games crash with hardened_malloc, so turn it off for both launchers, as secureblue's Steam recipe does
     flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.heroicgameslauncher.hgl
-
-    # Choose the Flatpak method when asked
-    flatpak info com.valvesoftware.Steam >/dev/null 2>&1 || ujust install-steam
+    flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.valvesoftware.Steam
+    # The rest of secureblue's Steam recipe, which this image doesn't ship: the permissions Steam needs and 32-bit support
+    flatpak override --user --share=network --share=ipc --socket=x11 --socket=pulseaudio --allow=multiarch --allow=per-app-dev-shm com.valvesoftware.Steam
+    if rpm-ostree kargs | grep -q 'ia32_emulation=0'; then
+        rpm-ostree kargs --delete-if-present=ia32_emulation=0
+        echo "Reboot before running Steam."
+    fi
 
     echo "Setup complete. Log out and back in to start using zsh."

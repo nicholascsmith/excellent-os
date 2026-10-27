@@ -92,6 +92,7 @@ modules:
       - proton-vpn.sh
       - ssh-agent.sh
       - xwayland.sh
+      - brave-malloc.sh
 
   - type: justfiles
 
