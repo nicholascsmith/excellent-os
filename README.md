@@ -24,12 +24,14 @@ ujust excellent-setup
 
 The setup asks for input a few times, and is safe to re-run. It:
 
-1. Enables Homebrew, installs `glab` and logs in to GitLab
-2. Installs the dotfiles
-3. Creates a git signing key and registers it with GitLab
-4. Recreates the login keyring without a password (it asks first), since autologin never unlocks it, and asks for the Context7 API key (press Enter to skip; re-run the setup to add it later)
-5. Switches the login shell to zsh
-6. Installs the Brewfile
-7. Installs the Flatpak apps, including Steam
+1. Enables Homebrew and installs `glab` and `chezmoi`
+2. Recreates the login keyring without a password (it asks first), since autologin never unlocks it
+3. Logs in to GitLab: enter the code it shows at gitlab.com on your phone or another computer
+4. Installs the dotfiles
+5. Creates a git signing key and registers it with GitLab
+6. Asks for the Context7 API key (press Enter to skip; re-run the setup to add it later)
+7. Switches the login shell to zsh
+8. Installs the Brewfile
+9. Installs the Flatpak apps, including Brave and Steam
 
 Afterwards, run `gh auth login`, then log out and back in.

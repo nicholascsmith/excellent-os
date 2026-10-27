@@ -27,9 +27,10 @@ excellent-setup:
         pkill -x -u "$USER" gnome-keyring-d || true
     fi
 
-    # HTTPS with glab as the credential helper, because a fresh machine has no SSH key at GitLab
+    # HTTPS with glab as the credential helper, because a fresh machine has no SSH key at GitLab.
+    # The device flow shows a code to enter on another device, since Brave isn't installed until the Flatpak step.
     if ! glab auth status --hostname gitlab.com >/dev/null 2>&1; then
-        glab auth login --hostname gitlab.com --web --git-protocol https --setup-git-credential-helper
+        glab auth login --hostname gitlab.com --device --git-protocol https --setup-git-credential-helper
     fi
     glab config set git_protocol https --host gitlab.com
     # glab records its versioned Cellar path as the helper, which `brew cleanup` deletes after an upgrade
@@ -82,6 +83,7 @@ excellent-setup:
 
     ujust set-flathub-unfiltered on
     flatpak install --user --or-update -y --noninteractive flathub \
+        com.brave.Browser \
         com.heroicgameslauncher.hgl \
         com.obsproject.Studio \
         org.inkscape.Inkscape \
@@ -89,7 +91,8 @@ excellent-setup:
         org.signal.Signal \
         com.valvesoftware.Steam
 
-    # Games crash with hardened_malloc, so turn it off for both launchers, as secureblue's Steam recipe does
+    # Brave and games crash with hardened_malloc, so make sure it stays off for them, as secureblue's Steam recipe does
+    flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.brave.Browser
     flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.heroicgameslauncher.hgl
     flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.valvesoftware.Steam
     # The rest of secureblue's Steam recipe, which this image doesn't ship: the permissions Steam needs and 32-bit support

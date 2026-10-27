@@ -71,17 +71,6 @@ modules:
           - old: sway
             new: swayfx
 
-  # Repos are only needed while building; the system updates as a whole image
-  - type: dnf
-    repos:
-      cleanup: true
-      files:
-        - brave-browser-beta.repo
-    install:
-      install-weak-deps: false
-      packages:
-        - brave-origin-beta
-
   - type: files
     files:
       - source: system
@@ -92,7 +81,6 @@ modules:
       - proton-vpn.sh
       - ssh-agent.sh
       - xwayland.sh
-      - brave-malloc.sh
 
   - type: justfiles
 
