@@ -1,10 +1,10 @@
 # excellent-os
 
-A workstation image built with [BlueBuild](https://blue-build.org) on top of [secureblue](https://secureblue.dev)'s `sericea-main-hardened`. The image rebuilds daily and is signed. Dotfiles are installed after first boot.
+A workstation image built with [BlueBuild](https://blue-build.org) on top of [secureblue](https://secureblue.dev)'s `silverblue-main-hardened` (GNOME). The image rebuilds daily and is signed. Dotfiles are installed after first boot.
 
 ## Install
 
-1. **Install secureblue.** Follow [secureblue's install guide](https://secureblue.dev/install#iso) to install its Sway ISO (the `main` image), with Secure Boot on. Encrypt the disk, name the user `ncarters` and make it an administrator: the image logs that user in automatically, so the disk password is the only one you type at boot.
+1. **Install secureblue.** Follow [secureblue's install guide](https://secureblue.dev/install#iso) to install its GNOME ISO (the `main` image), with Secure Boot on. Encrypt the disk, name the user `ncarters` and make it an administrator.
 
 2. **Enroll secureblue's Secure Boot key.** On the first boot, a blue MOK screen appears: choose **Enroll MOK → Continue → Yes** and type `secureblue`. If it never appears, run `ujust enroll-secureblue-secure-boot-key` and reboot.
 
@@ -25,14 +25,13 @@ ujust excellent-setup
 The setup asks for input a few times, and is safe to re-run. It:
 
 1. Enables Homebrew and installs `glab` and `chezmoi`
-2. Recreates the login keyring without a password (it asks first), since autologin never unlocks it
-3. Logs in to GitLab: enter the code it shows at gitlab.com on your phone or another computer
-4. Installs the dotfiles
-5. Creates a git signing key and registers it with GitLab
-6. Asks for the Context7 API key (press Enter to skip; re-run the setup to add it later)
-7. Switches the login shell to zsh
-8. Installs the Brewfile
-9. Installs the Flatpak apps, including Brave and Steam
-10. Logs in to GitHub in Brave and registers the signing key there too
+2. Logs in to GitLab: enter the code it shows at gitlab.com on your phone or another computer
+3. Installs the dotfiles
+4. Creates a git signing key and registers it with GitLab
+5. Asks for the Context7 API key (press Enter to skip; re-run the setup to add it later)
+6. Switches the login shell to zsh
+7. Installs the Brewfile
+8. Installs the Flatpak apps, including Brave, Loupe and Steam
+9. Logs in to GitHub in Brave and registers the signing key there too
 
 Afterwards, log out and back in.

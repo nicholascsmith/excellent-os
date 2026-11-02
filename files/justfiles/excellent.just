@@ -8,26 +8,7 @@ excellent-setup:
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     brew install glab chezmoi
 
-    # secureblue's first password login locked this keyring with the login password, which autologin never types.
-    # Encrypted keyrings start with "GnomeKeyring"; a passwordless one is plain text, so re-runs skip this.
-    # This runs before the GitLab login, because glab stores its token in this keyring.
-    keyrings="$HOME/.local/share/keyrings"
-    if [[ -f "$keyrings/login.keyring" && "$(head -c 12 "$keyrings/login.keyring")" == GnomeKeyring ]]; then
-        read -rp "Replace the password-locked login keyring with one that has no password? It is empty on a fresh install. [y/N] " answer
-        if [[ "$answer" == [yY]* ]]; then
-            rm "$keyrings/login.keyring"
-        fi
-    fi
-    # A passwordless keyring is stored as plain text and never locks; the encrypted disk protects it
-    if [[ ! -f "$keyrings/login.keyring" ]]; then
-        install -d -m 700 "$keyrings"
-        printf '[keyring]\ndisplay-name=Login\nctime=0\nmtime=0\nlock-on-idle=false\nlock-after=false\n' >"$keyrings/login.keyring"
-        chmod 600 "$keyrings/login.keyring"
-        echo login >"$keyrings/default"
-        pkill -x -u "$USER" gnome-keyring-d || true
-    fi
-
-    # HTTPS with glab as the credential helper, because a fresh machine has no SSH key at GitLab.
+    # HTTPS with glab as the credential helper, because a fresh machine has no SSH key at GitLab; glab keeps its token in the login keyring.
     # The device flow shows a code to enter on another device, since Brave isn't installed until the Flatpak step.
     if ! glab auth status --hostname gitlab.com >/dev/null 2>&1; then
         glab auth login --hostname gitlab.com --device --git-protocol https --setup-git-credential-helper
@@ -88,6 +69,7 @@ excellent-setup:
         com.obsproject.Studio \
         org.inkscape.Inkscape \
         org.kde.kdenlive \
+        org.gnome.Loupe \
         org.signal.Signal \
         com.valvesoftware.Steam
 
