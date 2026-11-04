@@ -11,7 +11,7 @@ A workstation image built with [BlueBuild](https://blue-build.org) on top of [se
 3. **Switch to the image.** secureblue rejects images signed by keys it doesn't know, so the script trusts this image's key just long enough to switch to it with signature checks on.
 
    ```bash
-   run0
+   run0 -i
    curl -fsSL https://raw.githubusercontent.com/nicholascsmith/excellent-os/master/install.sh | bash
    systemctl reboot
    ```
