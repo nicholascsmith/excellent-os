@@ -1,4 +1,4 @@
-# Set up dotfiles, logins, zsh, Homebrew, Flatpaks and Steam after first boot; safe to re-run
+# Set up dotfiles, logins, zsh, Homebrew and Flatpaks after first boot; safe to re-run
 excellent-setup:
     #!/usr/bin/bash
     set -euo pipefail
@@ -69,20 +69,11 @@ excellent-setup:
         com.obsproject.Studio \
         org.inkscape.Inkscape \
         org.kde.kdenlive \
-        org.gnome.Loupe \
-        org.signal.Signal \
-        com.valvesoftware.Steam
+        org.gnome.Loupe
 
-    # Brave and games crash with hardened_malloc, so make sure it stays off for them, as secureblue's Steam recipe does
+    # Brave and games crash with hardened_malloc, so make sure it stays off for them
     flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.brave.Browser
     flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.heroicgameslauncher.hgl
-    flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.valvesoftware.Steam
-    # The rest of secureblue's Steam recipe, which this image doesn't ship: the permissions Steam needs and 32-bit support
-    flatpak override --user --share=network --share=ipc --socket=x11 --socket=pulseaudio --allow=multiarch --allow=per-app-dev-shm com.valvesoftware.Steam
-    if rpm-ostree kargs | grep -q 'ia32_emulation=0'; then
-        rpm-ostree kargs --delete-if-present=ia32_emulation=0
-        echo "Reboot before running Steam."
-    fi
 
     # GitHub verifies signed commits only against signing keys registered there, so register the same key.
     # This comes after the Flatpaks, so the login can open Brave.
