@@ -31,7 +31,7 @@ The setup asks for input a few times, and is safe to re-run. It:
 5. Asks for the Context7 API key (press Enter to skip; re-run the setup to add it later)
 6. Switches the login shell to zsh
 7. Installs the Brewfile
-8. Installs the Flatpak apps, including Brave and Loupe
-9. Logs in to GitHub in Brave and registers the signing key there too
+8. Installs the Flatpak apps, including Loupe
+9. Logs in to GitHub in Trivalent and registers the signing key there too
 
 Afterwards, log out and back in.

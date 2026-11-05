@@ -9,7 +9,7 @@ excellent-setup:
     brew install glab chezmoi
 
     # HTTPS with glab as the credential helper, because a fresh machine has no SSH key at GitLab; glab keeps its token in the login keyring.
-    # The device flow shows a code to enter on another device, since Brave isn't installed until the Flatpak step.
+    # The device flow shows a code to enter on another device.
     if ! glab auth status --hostname gitlab.com >/dev/null 2>&1; then
         glab auth login --hostname gitlab.com --device --git-protocol https --setup-git-credential-helper
     fi
@@ -64,19 +64,15 @@ excellent-setup:
 
     ujust set-flathub-unfiltered on
     flatpak install --user --or-update -y --noninteractive flathub \
-        com.brave.Browser \
         com.heroicgameslauncher.hgl \
         com.obsproject.Studio \
         org.inkscape.Inkscape \
-        org.kde.kdenlive \
         org.gnome.Loupe
 
-    # Brave and games crash with hardened_malloc, so make sure it stays off for them
-    flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.brave.Browser
+    # Games crash with hardened_malloc, so make sure it stays off for them
     flatpak override --user --unset-env=LD_PRELOAD --nofilesystem=host-os com.heroicgameslauncher.hgl
 
     # GitHub verifies signed commits only against signing keys registered there, so register the same key.
-    # This comes after the Flatpaks, so the login can open Brave.
     if ! gh auth status --hostname github.com >/dev/null 2>&1; then
         gh auth login --hostname github.com --web --git-protocol https --skip-ssh-key --scopes admin:ssh_signing_key
     fi
