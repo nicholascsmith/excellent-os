@@ -62,7 +62,6 @@ modules:
 
   - type: script
     scripts:
-      - proton-vpn.sh
       - ssh-agent.sh
       - xwayland.sh
 

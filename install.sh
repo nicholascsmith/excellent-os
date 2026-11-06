@@ -11,8 +11,7 @@ policy=/etc/containers/policy.json
 policy_tmp=$(mktemp)
 
 restore() {
-	cp /usr/etc/containers/policy.json "$policy"
-	rm -f "$key" "$registry" "$policy_tmp"
+	rm -f "$policy" "$key" "$registry" "$policy_tmp"
 }
 trap restore EXIT
 
@@ -20,7 +19,7 @@ mkdir -p /etc/pki/containers
 curl -fsSLo "$key" https://raw.githubusercontent.com/nicholascsmith/excellent-os/master/cosign.pub
 jq --arg image "$image" --arg key "$key" \
 	'.transports.docker |= {($image): [{type: "sigstoreSigned", keyPath: $key, signedIdentity: {type: "matchRepository"}}]} + .' \
-	/usr/etc/containers/policy.json >"$policy_tmp"
+	/usr/share/containers/policy.json >"$policy_tmp"
 cp "$policy_tmp" "$policy"
 printf 'docker:\n  %s:\n    use-sigstore-attachments: true\n' "$image" >"$registry"
 
