@@ -5,7 +5,7 @@
 set -euo pipefail
 
 image=ghcr.io/nicholascsmith/excellent-os
-key=/etc/pki/containers/excellent-os.pub
+key=/etc/pki/containers/excellent-os-install.pub
 registry=/etc/containers/registries.d/excellent-os.yaml
 policy=/etc/containers/policy.json
 policy_tmp=$(mktemp)

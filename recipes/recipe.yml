@@ -69,3 +69,7 @@ modules:
   - type: justfiles
 
   - type: signing
+
+  - type: script
+    scripts:
+      - image-key.sh
