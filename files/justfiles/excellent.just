@@ -66,7 +66,7 @@ excellent-setup:
     flatpak install --user --or-update -y --noninteractive flathub \
         com.heroicgameslauncher.hgl \
         com.obsproject.Studio \
-        com.spotify.Client \
+        com.brave.Browser \
         org.inkscape.Inkscape \
         org.gnome.Loupe
 
